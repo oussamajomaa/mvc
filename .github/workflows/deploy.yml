@@ -1,0 +1,30 @@
+name: Déploiement PHP sur VPS
+
+on:
+  push:
+    branches:
+      - master  # Déclenche le déploiement à chaque push sur la branche main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Récupérer le code depuis GitHub
+      uses: actions/checkout@v3
+
+    - name: Déploiement via SSH sur VPS
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd /var/www/html/mvc
+          git pull origin main
+          composer install --no-dev --optimize-autoloader
+          php artisan migrate --force
+          php artisan cache:clear
+          php artisan config:clear
+          echo "Déploiement terminé avec succès !"
