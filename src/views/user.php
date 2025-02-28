@@ -22,7 +22,7 @@
 </head>
 <body>
 
-    <h1 style="color: red;">Liste des Utilisateurs</h1>
+    <h1>Liste des Utilisateurs</h1>
 
     <?php if (!empty($users)): ?>
         <table>

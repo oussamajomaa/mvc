@@ -1,0 +1,19 @@
+# Apache doit avoir le module mod_rewrite activé pour que .htaccess fonctionne
+RewriteEngine On
+
+# ^$ → Correspond à l’URL vide (localhost/mvc)
+# public/index.php → Apache va servir ce fichier à la place
+# [L] → Stoppe la réécriture après cette règle (évite d’autres règles inutiles)
+RewriteRule ^$ public/index.php [L]
+
+# Si tu accèdes à http://localhost/mvc/style.css, 
+# Apache ne redirige pas vers public/style.css, il sert le fichier style.css normalement
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Si tu as un dossier /mvc/images/
+# Apache ne le redirige pas, mais charge localhost/mvc/images/
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# (.*) → Capture toute l’URL après /mvc/
+# public/$1 → Ajoute public/ devant l’URL capturée
+RewriteRule ^(.*)$ public/$1 [L] 
